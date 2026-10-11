@@ -1,0 +1,457 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ─────────────────────────────────────────────────────────────
+   Prism Theme Registry (Tailwind v4 inline theme tokens)
+   ───────────────────────────────────────────────────────────── */
+
+@theme inline {
+  /* ── Fonts (Geist Latin + Plex Arabic) ─────────────────── */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-arabic: var(--font-plex-arabic);
+  --font-heading: var(--font-geist-sans);
+
+  /* ── Prism native utilities ────────────────────────────── */
+  --color-bg: var(--bg);
+  --color-bg-accent: var(--bg-accent);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-hover: var(--bg-hover);
+
+  --color-panel: var(--panel);
+  --color-panel-strong: var(--panel-strong);
+
+  --color-card: var(--card);
+  --color-card-fg: var(--card-fg);
+
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-line-hover: var(--border-hover);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-text: var(--accent-text);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-accent-glow: var(--accent-glow);
+
+  --color-ok: var(--ok);
+  --color-ok-subtle: var(--ok-subtle);
+  --color-warn: var(--warn);
+  --color-warn-subtle: var(--warn-subtle);
+  --color-danger: var(--danger);
+  --color-danger-subtle: var(--danger-subtle);
+  --color-info: var(--info);
+  --color-info-subtle: var(--info-subtle);
+
+  /* ── shadcn compatibility utilities ────────────────────── */
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --color-popover: var(--panel);
+  --color-popover-foreground: var(--text);
+  --color-primary: var(--accent);
+  --color-primary-foreground: var(--accent-text);
+  --color-secondary: var(--panel-strong);
+  --color-secondary-foreground: var(--text);
+  --color-muted: var(--bg-hover);
+  --color-muted-foreground: var(--muted);
+  --color-accent-foreground: var(--accent-text);
+  --color-destructive: var(--danger);
+  --color-input: var(--border);
+  --color-ring: var(--ring);
+
+  --color-sidebar: var(--panel);
+  --color-sidebar-foreground: var(--text);
+  --color-sidebar-primary: var(--accent);
+  --color-sidebar-primary-foreground: var(--accent-text);
+  --color-sidebar-accent: var(--bg-hover);
+  --color-sidebar-accent-foreground: var(--text);
+  --color-sidebar-border: var(--border);
+  --color-sidebar-ring: var(--ring);
+
+  /* ── Chart palette ─────────────────────────────────────── */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-chart-6: var(--chart-6);
+  --color-chart-7: var(--chart-7);
+  --color-chart-8: var(--chart-8);
+
+  /* ── Radius (Kiro density) ─────────────────────────────── */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.875rem;
+
+  /* ── Typography scale (Kiro micro-typography) ──────────── */
+  --text-2xs: 10px;
+  --text-2xs--line-height: 14px;
+  --text-xs: 11px;
+  --text-xs--line-height: 16px;
+  --text-sm: 12px;
+  --text-sm--line-height: 18px;
+  --text-base: 13px;
+  --text-base--line-height: 20px;
+  --text-lg: 14px;
+  --text-lg--line-height: 20px;
+  --text-xl: 16px;
+  --text-xl--line-height: 24px;
+  --text-2xl: 20px;
+  --text-2xl--line-height: 28px;
+
+  /* ── Shadows (Kiro subtle depth) ───────────────────────── */
+  --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.04);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.06);
+  --shadow-md: 0 4px 12px rgb(0 0 0 / 0.08), 0 0 0 1px rgb(0 0 0 / 0.02);
+  --shadow-lg: 0 12px 28px rgb(0 0 0 / 0.12);
+  --shadow-xl: 0 20px 48px rgb(0 0 0 / 0.16);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LIGHT MODE — Prism Violet
+   ───────────────────────────────────────────────────────────── */
+:root {
+  --bg: #FAFAFB;
+  --bg-accent: #F4F3FF;
+  --bg-elevated: #FFFFFF;
+  --bg-hover: #F0F0F3;
+
+  --panel: #FFFFFF;
+  --panel-strong: #F5F5F8;
+
+  --card: #FFFFFF;
+  --card-fg: #09090B;
+
+  --text: #0A0A0C;
+  --text-strong: #000000;
+  --muted: #52525B;
+  --muted-strong: #3F3F46;
+
+  --border: #E8E7EC;
+  --border-strong: #D2D1D8;
+  --border-hover: #7C5CFF;
+
+  --accent: #7C5CFF;
+  --accent-hover: #8B6FFF;
+  --accent-text: #3B1E9C;
+  --accent-subtle: #7C5CFF1F;
+  --accent-glow: #7C5CFF26;
+  --ring: #6D4AFF;
+
+  --ok: #16A34A;
+  --ok-subtle: #16A34A1A;
+  --warn: #A16207;
+  --warn-subtle: #A162071A;
+  --danger: #E11D48;
+  --danger-subtle: #E11D481A;
+  --info: #2563EB;
+  --info-subtle: #2563EB1A;
+
+  --chart-1: #7C5CFF;
+  --chart-2: #0EA5E9;
+  --chart-3: #F59E0B;
+  --chart-4: #10B981;
+  --chart-5: #EC4899;
+  --chart-6: #8B5CF6;
+  --chart-7: #14B8A6;
+  --chart-8: #F43F5E;
+
+  --radius: 0.5rem;
+
+  --background: var(--bg);
+  --foreground: var(--text);
+  --card-color: var(--card);
+  --card-foreground: var(--card-fg);
+  --popover: var(--panel);
+  --popover-foreground: var(--text);
+  --primary: var(--accent);
+  --primary-foreground: var(--accent-text);
+  --secondary: var(--panel-strong);
+  --secondary-foreground: var(--text);
+  --muted-color: var(--bg-hover);
+  --muted-foreground: var(--muted);
+  --accent-foreground: var(--accent-text);
+  --destructive: var(--danger);
+  --input: var(--border);
+
+  --sidebar: var(--panel);
+  --sidebar-foreground: var(--text);
+  --sidebar-primary: var(--accent);
+  --sidebar-primary-foreground: var(--accent-text);
+  --sidebar-accent: var(--bg-hover);
+  --sidebar-accent-foreground: var(--text);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   DARK MODE — Prism Violet
+   ───────────────────────────────────────────────────────────── */
+.dark {
+  --bg: #0F0F14;
+  --bg-accent: #17171F;
+  --bg-elevated: #1C1C22;
+  --bg-hover: #23232B;
+
+  --panel: #17171C;
+  --panel-strong: #1F1F26;
+
+  --card: #1C1C22;
+  --card-fg: #FAFAFA;
+
+  --text: #F4F4F5;
+  --text-strong: #FFFFFF;
+  --muted: #A1A1AA;
+  --muted-strong: #C7C7CE;
+
+  --border: #27272A;
+  --border-strong: #3F3F46;
+  --border-hover: #8B6FFF;
+
+  --accent: #8B6FFF;
+  --accent-hover: #A78BFA;
+  --accent-text: #C4B5FD;
+  --accent-subtle: #8B6FFF1F;
+  --accent-glow: #8B6FFF33;
+  --ring: #A78BFA;
+
+  --ok: #4ADE80;
+  --ok-subtle: #4ADE801A;
+  --warn: #FBBF24;
+  --warn-subtle: #FBBF241A;
+  --danger: #FB7185;
+  --danger-subtle: #FB71851A;
+  --info: #60A5FA;
+  --info-subtle: #60A5FA1A;
+
+  --chart-1: #8B6FFF;
+  --chart-2: #38BDF8;
+  --chart-3: #FBBF24;
+  --chart-4: #34D399;
+  --chart-5: #F472B6;
+  --chart-6: #A78BFA;
+  --chart-7: #2DD4BF;
+  --chart-8: #FB7185;
+
+  --radius: 0.5rem;
+
+  --background: var(--bg);
+  --foreground: var(--text);
+  --card-color: var(--card);
+  --card-foreground: var(--card-fg);
+  --popover: var(--panel);
+  --popover-foreground: var(--text);
+  --primary: var(--accent);
+  --primary-foreground: var(--accent-text);
+  --secondary: var(--panel-strong);
+  --secondary-foreground: var(--text);
+  --muted-color: var(--bg-hover);
+  --muted-foreground: var(--muted);
+  --accent-foreground: var(--accent-text);
+  --destructive: var(--danger);
+  --input: var(--border);
+
+  --sidebar: var(--panel);
+  --sidebar-foreground: var(--text);
+  --sidebar-primary: var(--accent);
+  --sidebar-primary-foreground: var(--accent-text);
+  --sidebar-accent: var(--bg-hover);
+  --sidebar-accent-foreground: var(--text);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   BASE LAYER
+   ───────────────────────────────────────────────────────────── */
+@layer base {
+  html {
+    font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 500;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    background-color: var(--bg);
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    font-weight: 500;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text-strong);
+  }
+
+  [dir="rtl"] body {
+    font-family: var(--font-plex-arabic), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  code, kbd, pre, samp {
+    font-family: var(--font-geist-mono), ui-monospace, monospace;
+  }
+
+  * {
+    border-color: var(--border);
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PRISM UTILITIES
+   Plain CSS — bypasses Tailwind class scanning issues.
+   ───────────────────────────────────────────────────────────── */
+
+/* ── Text colors ─────────────────────────────────────────── */
+
+.text-prism-text {
+  color: var(--text);
+}
+
+.text-prism-text-strong {
+  color: var(--text-strong);
+}
+
+.text-prism-muted {
+  color: var(--muted);
+}
+
+.text-prism-muted-strong {
+  color: var(--muted-strong);
+}
+
+.text-prism-accent {
+  color: var(--accent);
+}
+
+.text-prism-accent-text {
+  color: var(--accent-text);
+}
+
+.text-prism-ok {
+  color: var(--ok);
+}
+
+.text-prism-warn {
+  color: var(--warn);
+}
+
+.text-prism-danger {
+  color: var(--danger);
+}
+
+.text-prism-info {
+  color: var(--info);
+}
+
+/* ── Background colors ───────────────────────────────────── */
+
+.bg-bg {
+  background-color: var(--bg);
+}
+
+.bg-bg-accent {
+  background-color: var(--bg-accent);
+}
+
+.bg-bg-elevated {
+  background-color: var(--bg-elevated);
+}
+
+.bg-bg-hover {
+  background-color: var(--bg-hover);
+}
+
+.bg-panel {
+  background-color: var(--panel);
+}
+
+.bg-panel-strong {
+  background-color: var(--panel-strong);
+}
+
+.bg-card {
+  background-color: var(--card);
+}
+
+.bg-accent {
+  background-color: var(--accent);
+}
+
+.bg-accent-hover {
+  background-color: var(--accent-hover);
+}
+
+.bg-accent-subtle {
+  background-color: var(--accent-subtle);
+}
+
+.bg-ok-subtle {
+  background-color: var(--ok-subtle);
+}
+
+.bg-warn-subtle {
+  background-color: var(--warn-subtle);
+}
+
+.bg-danger-subtle {
+  background-color: var(--danger-subtle);
+}
+
+.bg-info-subtle {
+  background-color: var(--info-subtle);
+}
+
+/* ── Border colors ───────────────────────────────────────── */
+
+.border-border {
+  border-color: var(--border);
+}
+
+.border-border-strong {
+  border-color: var(--border-strong);
+}
+
+.border-border-hover {
+  border-color: var(--border-hover);
+}
+
+.border-accent {
+  border-color: var(--accent);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   INTERACTIVE CURSORS
+   Ensure buttons, links, and clickable controls show the
+   hand cursor. Applies to every button and role=button.
+   ───────────────────────────────────────────────────────────── */
+
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]) {
+  cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+/* Links styled as buttons */
+a[href] {
+  cursor: pointer;
+}
