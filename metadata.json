@@ -1,0 +1,7 @@
+{
+  "name": "Prism",
+  "description": "Visual analytics and dashboard editor for modern teams",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
