@@ -2,7 +2,11 @@ import { Suspense } from "react"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 import { auth } from "@/features/auth/auth"
-import { getUserOrganizations, createDefaultOrganization } from "@/features/auth/services/organizations"
+import {
+  getUserOrganizations,
+  getActiveOrganizationForUser,
+  createDefaultOrganization,
+} from "@/features/auth/services/organizations"
 import { getSubscription } from "@/features/billing/services"
 import { AppShell } from "@/components/layout/AppShell"
 import { PageLoader } from "@/components/ui/prism/PageLoader"
@@ -42,7 +46,11 @@ async function AppLayoutInner({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const activeOrg = memberships[0].org
+  let activeOrg = await getActiveOrganizationForUser(session.user.id)
+  if (!activeOrg) {
+    activeOrg = memberships[0].org
+  }
+
   let subPlan = "free"
 
   try {
@@ -69,6 +77,7 @@ async function AppLayoutInner({ children }: { children: React.ReactNode }) {
       user={session.user}
       organization={currentOrg}
       organizations={orgList}
+      activeOrganizationId={activeOrg.id}
     >
       {children}
     </AppShell>

@@ -69,9 +69,10 @@ export interface AppSidebarProps {
     name: string
     plan?: string
   }[]
+  activeOrganizationId?: string
 }
 
-function AppSidebarContent({ user, organization, organizations }: AppSidebarProps) {
+function AppSidebarContent({ user, organization, organizations, activeOrganizationId }: AppSidebarProps) {
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -147,6 +148,7 @@ function AppSidebarContent({ user, organization, organizations }: AppSidebarProp
           <OrgSwitcher
             currentOrg={organization}
             organizations={organizations}
+            activeOrganizationId={activeOrganizationId}
           />
         </div>
       )}
@@ -157,6 +159,7 @@ function AppSidebarContent({ user, organization, organizations }: AppSidebarProp
             collapsed
             currentOrg={organization}
             organizations={organizations}
+            activeOrganizationId={activeOrganizationId}
           />
         </div>
       )}

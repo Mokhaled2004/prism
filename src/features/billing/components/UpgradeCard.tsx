@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useState, useEffect, useTransition } from "react"
 import { Check, ArrowUpRight } from "lucide-react"
 import { PlanBadge } from "./PlanBadge"
 import { PLAN_DEFINITIONS, type PlanId } from "../plans"
@@ -20,11 +20,17 @@ interface UpgradeCardProps {
 export function UpgradeCard({
   organizationId,
   currentPlan,
-  usage = { dashboards: 4, datasources: 1, seats: 1 },
+  usage = { dashboards: 0, datasources: 0, seats: 1 },
 }: UpgradeCardProps) {
   const [isPending, startTransition] = useTransition()
   const [activePlan, setActivePlan] = useState<string>(currentPlan)
   const [feedback, setFeedback] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (currentPlan) {
+      setActivePlan(currentPlan)
+    }
+  }, [currentPlan])
 
   const activeKey = (activePlan as PlanId) in PLAN_DEFINITIONS ? (activePlan as PlanId) : "free"
   const currentDef = PLAN_DEFINITIONS[activeKey]

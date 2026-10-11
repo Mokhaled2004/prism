@@ -5,10 +5,15 @@ export interface AppShellProps extends AppSidebarProps {
   children: ReactNode
 }
 
-export function AppShell({ children, user, organization, organizations }: AppShellProps) {
+export function AppShell({ children, user, organization, organizations, activeOrganizationId }: AppShellProps) {
   return (
     <div className="flex h-dvh w-full bg-bg overflow-hidden">
-      <AppSidebar user={user} organization={organization} organizations={organizations} />
+      <AppSidebar
+        user={user}
+        organization={organization}
+        organizations={organizations}
+        activeOrganizationId={activeOrganizationId}
+      />
       <main className="flex-1 min-w-0 overflow-auto bg-bg">{children}</main>
     </div>
   )

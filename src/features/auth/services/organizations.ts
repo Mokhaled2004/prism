@@ -1,8 +1,8 @@
 "use server"
 
 import { db } from "@/db"
-import { organization, member, invitation, subscriptions } from "@/db/schema"
-import { eq, and } from "drizzle-orm"
+import { organization, member, invitation, subscriptions, session as sessionTable } from "@/db/schema"
+import { eq, and, count } from "drizzle-orm"
 import { headers } from "next/headers"
 import { auth } from "../auth"
 import { revalidatePath } from "next/cache"
@@ -99,6 +99,18 @@ export async function createOrganizationAction(formData: { name: string; slug?: 
     updatedAt: now,
   })
 
+  // Set the new organization as active
+  try {
+    if (session.session?.id) {
+      await db
+        .update(sessionTable)
+        .set({ activeOrganizationId: orgId, updatedAt: new Date() })
+        .where(eq(sessionTable.id, session.session.id))
+    }
+  } catch (e) {
+    console.warn("Could not set newly created org as active on session:", e)
+  }
+
   revalidatePath("/dashboard")
   revalidatePath("/settings/organization")
   return newOrg
@@ -181,4 +193,98 @@ export async function getUserOrganizations(userId: string) {
     .where(eq(member.userId, userId))
 
   return members
+}
+
+export async function getActiveOrganizationForUser(userId: string) {
+  let activeOrgId: string | null = null
+
+  try {
+    const reqHeaders = await headers()
+    const authSession = await auth.api.getSession({ headers: reqHeaders })
+    if (authSession?.session?.activeOrganizationId) {
+      activeOrgId = authSession.session.activeOrganizationId
+    }
+  } catch (err) {
+    console.warn("Could not retrieve session headers in getActiveOrganizationForUser:", err)
+  }
+
+  if (activeOrgId) {
+    const activeMember = await db
+      .select({
+        org: organization,
+      })
+      .from(member)
+      .innerJoin(organization, eq(member.organizationId, organization.id))
+      .where(and(eq(member.userId, userId), eq(member.organizationId, activeOrgId)))
+      .limit(1)
+
+    if (activeMember.length > 0) {
+      return activeMember[0].org
+    }
+  }
+
+  // Fallback to first membership
+  const memberships = await db
+    .select({
+      org: organization,
+    })
+    .from(member)
+    .innerJoin(organization, eq(member.organizationId, organization.id))
+    .where(eq(member.userId, userId))
+    .limit(1)
+
+  return memberships[0]?.org ?? null
+}
+
+export async function setActiveOrganization(orgId: string) {
+  const reqHeaders = await headers()
+  const authSession = await auth.api.getSession({ headers: reqHeaders })
+  if (!authSession?.user?.id) {
+    throw new Error("Unauthorized")
+  }
+
+  // Verify membership
+  const isMember = await db
+    .select({ id: member.id })
+    .from(member)
+    .where(and(eq(member.userId, authSession.user.id), eq(member.organizationId, orgId)))
+    .limit(1)
+
+  if (isMember.length === 0) {
+    throw new Error("You are not a member of this organization")
+  }
+
+  // Update session table
+  if (authSession.session?.id) {
+    await db
+      .update(sessionTable)
+      .set({
+        activeOrganizationId: orgId,
+        updatedAt: new Date(),
+      })
+      .where(eq(sessionTable.id, authSession.session.id))
+  }
+
+  // Also call Better Auth API endpoint if available
+  try {
+    await auth.api.setActiveOrganization({
+      body: { organizationId: orgId },
+      headers: reqHeaders,
+    })
+  } catch (err) {
+    // DB update above guarantees persistence
+  }
+
+  revalidatePath("/dashboard")
+  revalidatePath("/", "layout")
+  return { success: true, organizationId: orgId }
+}
+
+export async function getMemberCount(organizationId: string): Promise<number> {
+  const result = await db
+    .select({ value: count() })
+    .from(member)
+    .where(eq(member.organizationId, organizationId))
+
+  return Number(result[0]?.value ?? 0)
 }

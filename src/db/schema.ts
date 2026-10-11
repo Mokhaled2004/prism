@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core"
+import { pgTable, text, timestamp, boolean, jsonb, unique, index } from "drizzle-orm/pg-core"
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -88,3 +88,33 @@ export const subscriptions = pgTable("subscriptions", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 })
+
+export const dashboards = pgTable("dashboards", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  organizationId: text("organization_id").notNull().references(() => organization.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  slug: text("slug").notNull(),
+  description: text("description"),
+  config: jsonb("config").notNull().default({}),
+  isPublished: boolean("is_published").notNull().default(false),
+  createdBy: text("created_by").notNull().references(() => user.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (t) => ({
+  orgSlugUnique: unique().on(t.organizationId, t.slug),
+  orgIdx: index("dashboards_org_idx").on(t.organizationId),
+}))
+
+export const dataSources = pgTable("data_sources", {
+  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  organizationId: text("organization_id").notNull().references(() => organization.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  type: text("type").notNull(),   // 'csv' | 'postgres' | 'mysql' | 'rest' — for now only 'csv' is supported
+  config: jsonb("config").notNull().default({}),
+  createdBy: text("created_by").notNull().references(() => user.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+}, (t) => ({
+  orgIdx: index("data_sources_org_idx").on(t.organizationId),
+}))
+

@@ -1,6 +1,1 @@
-export interface Dashboard {
-  id: string
-  name: string
-  isPublished: boolean
-  updatedAt: number
-}
+export type { Dashboard } from "@/features/dashboards/types"
